@@ -1,0 +1,54 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<script src="js/jquery-1.11.3.min.js"></script>
+<script>
+$(document).ready(function(){
+  $("#getBtn").click(function(){
+	  $.ajax({
+		  type:"POST",
+		  url:"http://101.200.215.79:38080/wilysis/1.0/videoExperiences/",
+		  contentType:"application/json;charset=utf-8",
+		  dataType:"json",
+		  data:JSON.stringify({
+			  "operatorId":"02",
+			  "standard":"13",
+			  "longitude":116.350732,
+			  "latitude":39.959703 ,
+			  "radius":200.0,
+			  "location":"",
+			  "startTime":"2016-06-24 14:38:03",
+			  "endTime":"2016-06-27 14:43:03",
+			  "target":"video"
+		  }),
+
+
+		  success:function(jsonObj){
+			  $("#mos").html(jsonObj[0].mos);
+			  $("#bufferTime").html(jsonObj[0].bufferTime);
+			  $("#bufferFrequency").html(jsonObj[0].bufferFrequency + "HZ");
+			  $("#throughput").html(jsonObj[0].throughputs[0]);
+			  $("#loadTime").html(jsonObj[0].loadTime + "ms");
+		  },
+		  error:function(jqXHR){
+			  alert("Error"+jqXHR.status);
+		  }
+	  });
+  });
+  
+  
+  
+});
+</script>
+</head>
+<body>
+
+<div>
+<button type="button" id="getBtn">GET</button>
+<div id="data"></div>
+</div>
+<br>
+
+
+</body>
+</html>

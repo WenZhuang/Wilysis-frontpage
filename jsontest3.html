@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="js/jquery-1.11.3.min.js"></script>
+<script>
+$(document).ready(function(){
+ 
+  Date.prototype.Format = function(formatStr)   
+  {   
+    var str = formatStr;   
+    str=str.replace(/yyyy|YYYY/,this.getFullYear());     
+    str=str.replace(/MM|mm/,(this.getMonth()+1)>9?(this.getMonth()+1).toString():'0' + (this.getMonth()+1));     
+    str=str.replace(/dd|DD/,this.getDate()>9?this.getDate().toString():'0' + this.getDate());   
+  
+    str=str.replace(/hh|HH/,this.getHours()>9?this.getHours().toString():'0' + this.getHours());   
+    str=str.replace(/mm/,this.getMinutes()>9?this.getMinutes().toString():'0' + this.getMinutes());   
+    str=str.replace(/ss|SS/,this.getSeconds()>9?this.getSeconds().toString():'0' + this.getSeconds());   
+  
+    return str;   
+  }
+   var now = new Date();
+   var time = now.getTime() - 30*24*3600*1000;
+   var before = new Date(time);
+   var endTime = now.Format("yyyy-mm-dd hh:mm:ss");
+   var startTime = before.Format("yyyy-mm-dd hh:mm:ss");
+   
+  document.getElementById("startDay").value=startTime.replace(" ","T");
+  document.getElementById("endDay").value=endTime.replace(" ","T");
+
+  $("#getDate").click(function(){
+	$("#data").html(document.getElementById("endDay").value);
+  });
+ 
+  
+  $("#getBtn").click(function(){
+    $.ajax({  
+		type:"POST",	
+        url:"http://101.200.215.79:38080/wilysis/1.0/QoeList/",
+		contentType:"application/json;charset=utf-8",
+		dataType:"json",
+		data:JSON.stringify({						
+			"operatorId":"02",
+			"standard":"13",
+			"longitude":116.364549,
+			"latitude":39.968112,
+			"radius":2000.0,
+			"location":"indoor",
+			"startTime":startTime,
+			"endTime":endTime,
+			"target":"QoE"
+		}),
+        
+				
+        success:function(jsonObj){
+           
+		   $("#data").html(jsonObj.points[0].value);
+        },
+        error:function(jqXHR){
+             $("#data").html("Error:"+jqXHR.status);
+        }
+    });
+  });
+  
+  
+  
+});
+
+function getAvrQoe(points){
+	var avrQoe = [];
+	var len = points.length;
+	var sum = 0;
+	var bad = 0;
+	for(var i = 0; i < len; i++){
+		sum += points[i].value;
+		if(point[i].value <= 2){
+			bad += 1; 
+		}
+	}
+	avrQoe[0] = sum/len;
+	avrQoe[1] = bad/len;
+	return avrQoe;
+}
+</script>
+</head>
+<body>
+<div style="margin-left: 5%; float: left;">
+    <form action="action_page.php">
+    日期:
+    <input type="datetime-local" id="startDay" name="startday" >
+    -
+    <input type="datetime-local" id="endDay" name="endday">                  
+    </form>
+</div>
+<div>
+<button type="button" id="getBtn">GET</button>
+<button type="button" id="getDate">GETDate</button>
+<div id="data"></div>
+</div>
+<br>
+
+
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8">
+<script src="js/jquery-1.11.3.min.js"></script>
+<script>
+$(document).ready(function(){
+  $("#getBtn").click(function(){
+    $.ajax({  
+		type:"POST",	
+        url:"http://101.200.215.79:38080/wilysis/1.0/videoExperiences/",
+		contentType:"application/json;charset=utf-8",
+		dataType:"json",
+		data:JSON.stringify({			
+			"operatorId":"02",
+			"standard":"13",
+			"longitude":116.350732,
+			"latitude":39.959703 ,
+			"radius":200.0,
+			"location":"",
+			"startTime":"2016-06-20 14:38:03",
+			"endTime":"2016-06-27 14:43:03",
+			"target":"video"
+		}),
+        
+				
+        success:function(jsonObj){
+		  $("#mos").html(jsonObj[0].mos);
+		  $("#bufferTime").html(jsonObj[0].bufferTime);
+		  $("#bufferFrequency").html(jsonObj[0].bufferFrequency + "HZ");
+		  $("#throughput").html(getAvr(jsonObj[0].throughputs));
+		  $("#loadTime").html(jsonObj[0].loadTime + "ms");
+         // alert(getAvr([1,2,3,4,5]));
+        },
+        error:function(jqXHR){
+             alert("Error"+jqXHR.status);
+        }
+    });
+  });
+
+function getAvr(array){
+    var len = array.length;
+    if (len === 0) {
+        return 0;
+    }
+    var sum = 0;
+    for (var i = 0; i < len; i++) {
+       sum += array[i];
+    }
+    var avr = sum/len;
+    return avr;
+}
+  
+  
+});
+</script>
+</head>
+<body>
+<div>
+<table class="col-table">
+                        <tr>
+                            <td class="col-table-td-shadow">视频QOE数值</td>
+                            <td class="col-table-td-shadow">数值包含</td>
+                            <td class="col-table-td-shadow">数值大小</td>
+                        </tr>
+                        <tr>
+                            <td class="col-tabl-td">Mos值</td>
+                            <td class="col-tabl-td">五分制平均估分值</td>
+                            <td class="col-tabl-td" id="mos"></td>
+                        </tr>
+                        <tr>
+                            <td class="col-tabl-td">缓冲时间</td>
+                            <td class="col-tabl-td">视频播放过程中平均出现的停顿时间</td>
+                            <td class="col-tabl-td" id="bufferTime"></td>
+                        </tr>
+                        <tr>
+                            <td class="col-tabl-td">缓冲频率</td>
+                            <td class="col-tabl-td">单位时间内视频画面凝固、停顿的次数</td>
+                            <td class="col-tabl-td" id="bufferFrequency">HZ</td>
+                        </tr>
+                        <tr>
+                            <td class="col-tabl-td">TCP吞吐量</td>
+                            <td class="col-tabl-td"></td>
+                            <td class="col-tabl-td" id="throughput"></td>
+                        </tr>
+                        <tr>
+                            <td class="col-table-td-half-shadow">初始化时间</td>
+                            <td class="col-table-td-half-shadow">视频从开始加载到第一次播放的时间</td>
+                            <td class="col-table-td-half-shadow" id="loadTime">ms</td>
+                        </tr>
+                    </table>
+
+</div>
+<div>
+<button id="getBtn">GET</button>
+</div>
+</body>
+</html>

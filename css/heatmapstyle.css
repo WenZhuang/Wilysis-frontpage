@@ -1,0 +1,22 @@
+/*HEATMAP--------------
+-----------------------*/
+#mantle {
+    top:30%;
+    z-index:5;
+    padding: 20px;
+    width:auto;
+    height:auto;
+
+    background-color:rgba(51, 46, 46, 0.6);
+    background:transparent\0;
+    *background:transparent;
+    _background:transparent;
+
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#7000101a,endColorstr=#7000101a);
+    zoom: 1;
+
+
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+}

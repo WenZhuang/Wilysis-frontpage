@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="js/jquery-1.11.3.min.js"></script>
+<script>
+$(document).ready(function(){
+  $("#getBtn").click(function(){
+    $.ajax({  
+		type:"POST",	
+        url:"http://101.200.215.79:38080/wilysis/1.0/signals/",
+		contentType:"application/json;charset=utf-8",
+		dataType:"json",
+		data:JSON.stringify({			
+			 "operatorId":"02",
+			"standard":"13",
+			"longitude":116.364549,
+			"latitude":39.968112,
+			"radius":2000.0,
+			"location":"outdoor",
+			"startTime":"2016-06-09 14:38:03",
+			"endTime":"2016-06-25 14:43:03",
+			"target":"RSRQ"
+
+		}),
+        
+				
+        success:function(jsonObj){
+		   var hotMapPoints = jsonObj;
+		   for(var i = 0; i < hotMapPoints.length; i++){
+		       alert(hotMapPoints[i].location + ';' + hotMapPoints[i].longitude + ';' + hotMapPoints[i].latitude + ';' +hotMapPoints[i].value);
+		   }
+        },
+        error:function(jqXHR){
+             $("#data").html("Error:"+jqXHR.status);
+        }
+    });
+  });
+  
+  
+  
+});
+</script>
+</head>
+<body>
+
+<div>
+<button type="button" id="getBtn">GET</button>
+<div id="data"></div>
+</div>
+<br>
+
+
+</body>
+</html>
